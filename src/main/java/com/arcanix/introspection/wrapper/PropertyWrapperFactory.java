@@ -19,13 +19,13 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.arcanix.convert.Converters;
 import com.arcanix.introspection.util.ReflectionUtils;
 
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
- *
  */
 public final class PropertyWrapperFactory {
 
@@ -33,6 +33,8 @@ public final class PropertyWrapperFactory {
 		Class<?> clazz = ReflectionUtils.getClass(type);
 		if (clazz.isAssignableFrom(List.class)) {
 			return new ListWrapper(initialValue, type, converters);
+		} else if (clazz.isAssignableFrom(Set.class)) {
+			return new SetWrapper(initialValue, type, converters);
 		} else if (clazz.isAssignableFrom(Map.class)) {
 			return new MapWrapper(initialValue, type, converters);
 		} else {
@@ -43,6 +45,7 @@ public final class PropertyWrapperFactory {
 	public static boolean isWrapperType(final Type type) {
 		Class<?> clazz = ReflectionUtils.getClass(type);
 		if (clazz.isAssignableFrom(List.class)
+				|| clazz.isAssignableFrom(Set.class)
 				|| clazz.isAssignableFrom(Map.class)) {
 			
 			return true;

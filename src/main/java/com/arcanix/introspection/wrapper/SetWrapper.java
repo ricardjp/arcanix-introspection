@@ -17,8 +17,8 @@ package com.arcanix.introspection.wrapper;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.arcanix.convert.ConversionException;
 import com.arcanix.convert.Converters;
@@ -27,26 +27,27 @@ import com.arcanix.introspection.util.ReflectionUtils;
 
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
+ *
  */
-public class ListWrapper extends AbstractWrapper {
+public class SetWrapper extends AbstractWrapper {
 
-	private final List<Object> list;
+	private final Set<Object> set;
 	
 	private final Type type;
 	private final Class<?> elementType;
 	
 	@SuppressWarnings("unchecked")
-	public ListWrapper(final Object initialValue, final Type type, final Converters converters) {
+	public SetWrapper(final Object initialValue, final Type type, final Converters converters) {
 		super(converters);
 		
 		if (initialValue != null) {
-			this.list = (List<Object>) initialValue;
+			this.set = (Set<Object>) initialValue;
 		} else {
-			this.list = new ArrayList<>();
+			this.set = new HashSet<>();
 		}
 		
 		if (!(type instanceof ParameterizedType)) {
-			throw new IllegalArgumentException("List must be parameterized");
+			throw new IllegalArgumentException("Set must be parameterized");
 		}
 		
 		final ParameterizedType parameterizedType = (ParameterizedType) type;
@@ -55,23 +56,23 @@ public class ListWrapper extends AbstractWrapper {
 	}
 	
 	@Override
-	public Class<?> getTargetClass() {
-		return List.class;
-	}
-	
-	@Override
-	public Type getPropertyType(final Property property) {
-		return this.type;
-	}
-	
-	@Override
 	public Object getResult() {
-		return this.list;
+		return this.set;
+	}
+	
+	@Override
+	public Class<?> getTargetClass() {
+		return this.elementType;
+	}
+	
+	@Override
+	public Type getPropertyType(final Property property) throws NoSuchMethodException {
+		return this.type;
 	}
 	
 	public void setLocalProperty(final Property property) throws ConversionException {
 		if (this.elementType.getClass() == Class.class) {
-			this.list.add(getConverters().convert((Class<?>) this.elementType, property.getValue()));
+			this.set.add(getConverters().convert(this.elementType, property.getValue()));
 		} else {
 			throw new IllegalStateException("Cannot set local property of this container");
 		}
@@ -79,18 +80,21 @@ public class ListWrapper extends AbstractWrapper {
 	
 	@Override
 	public void setLocalProperty(final Property property, final PropertyWrapper propertyWrapper) {
-		this.list.add(propertyWrapper.getResult());
+		this.set.add(propertyWrapper.getResult());
 	}
-
+	
 	@Override
-	public Object getValue(final Property property) {
-		if (!property.isIndexed()) {
-			throw new IllegalArgumentException("Property must be indexed");
+	public Object getValue(final Property property) throws ConversionException {
+		Object converted = getConverters().convert(this.elementType, property.getValue());
+		
+		// only to get a specific instance from a set is to loop through elements
+		// TODO define own Set implementation ?
+		for (Object element : this.set) {
+			if (element.equals(converted)) {
+				return element;
+			}
 		}
-		if (property.getIndex() < 0 || property.getIndex() >= this.list.size()) {
-			return null;
-		}
-		return this.list.get(property.getIndex());
+		return null;
 	}
 	
 }
