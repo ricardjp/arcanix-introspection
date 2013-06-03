@@ -51,7 +51,8 @@ public final class PropertyResolver {
 	
 	public int getIndex(final String property) {
 		if (isIndexed(property)) {
-			return Integer.parseInt(property.substring(property.indexOf(INDEXED_START) + 1, property.indexOf(INDEXED_END)));
+			return Integer.parseInt(property.substring(
+					property.indexOf(INDEXED_START) + 1, property.indexOf(INDEXED_END)));
 		}
 		return -1;		
 	}

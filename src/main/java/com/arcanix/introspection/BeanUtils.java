@@ -15,18 +15,14 @@
  */
 package com.arcanix.introspection;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-
 import com.arcanix.convert.ConversionException;
 import com.arcanix.convert.Converters;
 import com.arcanix.introspection.wrapper.BeanWrapper;
 
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
- *
  */
-public class BeanUtils {
+public final class BeanUtils {
 
 	private final PropertyResolver resolver = new PropertyResolver();
 	private final Converters converters;
@@ -35,14 +31,10 @@ public class BeanUtils {
 		this.converters = converters;
 	}
 	
-	public void setNestedProperty(final Object bean, final String nestedProperty, final String value)
-		throws
-			InstantiationException,
-			IllegalAccessException,
-			IntrospectionException,
-			InvocationTargetException,
-			NoSuchMethodException,
-			ConversionException {
+	public void setNestedProperty(
+			final Object bean,
+			final String nestedProperty, 
+			final String value) throws ConversionException {
 		
 		Property property = this.resolver.resolveNestedProperty(nestedProperty, value);
 		BeanWrapper beanWrapper = new BeanWrapper(bean, bean.getClass(), this.converters);

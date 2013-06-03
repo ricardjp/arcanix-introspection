@@ -79,7 +79,13 @@ public class ListWrapper extends AbstractWrapper {
 	
 	@Override
 	public void setLocalProperty(final Property property, final PropertyWrapper propertyWrapper) {
-		this.list.add(propertyWrapper.getResult());
+		if (property.getIndex() < 0 || property.getIndex() >= this.list.size()) {
+			this.list.add(property.getIndex(), propertyWrapper.getResult());
+		} else {
+			this.list.set(property.getIndex(), propertyWrapper.getResult());
+		}
+		
+		
 	}
 
 	@Override

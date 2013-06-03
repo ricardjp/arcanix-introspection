@@ -37,10 +37,10 @@ public final class BeanInfoWrapper {
 		return this.propertyDescriptors.containsKey(propertyName);
 	}
 	
-	public PropertyDescriptor getPropertyDescriptor(final String propertyName) throws NoSuchMethodException {
+	public PropertyDescriptor getPropertyDescriptor(final String propertyName) throws PropertyException {
 		PropertyDescriptor propertyDescriptor = this.propertyDescriptors.get(propertyName);
 		if (propertyDescriptor == null) {
-			throw new NoSuchMethodException("Property " + propertyName + " does not exist");
+			throw new PropertyException("Property " + propertyName + " does not exist");
 		}
 		return propertyDescriptor;
 	}

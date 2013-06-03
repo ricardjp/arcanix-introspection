@@ -13,24 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.arcanix.introspection.wrapper;
-
-import java.lang.reflect.Type;
-
-import com.arcanix.convert.ConversionException;
-import com.arcanix.introspection.Property;
+package com.arcanix.introspection;
 
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
  */
-public interface PropertyWrapper {
+public class PropertyException extends RuntimeException {
 
-	void setProperty(Property property) throws ConversionException;
-	Object getResult();
-	Class<?> getTargetClass();
-	Type getPropertyType(Property property);
-	void setLocalProperty(Property property) throws ConversionException;
-	void setLocalProperty(Property property, PropertyWrapper propertyWrapper) throws ConversionException;
-	Object getValue(Property property) throws ConversionException;
+	private static final long serialVersionUID = 0L;
+
+	public PropertyException() {
+		super();
+	}
+	
+	public PropertyException(final String message) {
+		super(message);
+	}
+	
+	public PropertyException(final Throwable cause) {
+		super(cause);
+	}
+	
+	public PropertyException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 	
 }

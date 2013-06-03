@@ -18,13 +18,13 @@ package com.arcanix.introspection.wrapper;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 
 import com.arcanix.convert.ConversionException;
 import com.arcanix.convert.Converters;
 import com.arcanix.introspection.BeanInfoWrapper;
 import com.arcanix.introspection.Property;
+import com.arcanix.introspection.PropertyException;
 import com.arcanix.introspection.util.ReflectionUtils;
 
 /**
@@ -36,16 +36,19 @@ public final class BeanWrapper extends AbstractWrapper implements PropertyWrappe
 	private final Object bean;
 	private final Class<?> targetClass;
 	
-	public BeanWrapper(final Object initialValue, final Type type, final Converters converters) throws IntrospectionException, IllegalAccessException, InstantiationException {
+	public BeanWrapper(final Object initialValue, final Type type, final Converters converters) {
 		super(converters);
-		
-		this.targetClass = ReflectionUtils.getClass(type);
-		if (initialValue != null) {
-			this.bean = initialValue;
-		} else {
-			this.bean = this.targetClass.newInstance();
+		try {
+			this.targetClass = ReflectionUtils.getClass(type);
+			if (initialValue != null) {
+				this.bean = initialValue;
+			} else {
+				this.bean = this.targetClass.newInstance();
+			}
+			this.beanInfoWrapper = new BeanInfoWrapper(Introspector.getBeanInfo(ReflectionUtils.getClass(type)));
+		} catch (ReflectiveOperationException | IntrospectionException e) {
+			throw new PropertyException(e);
 		}
-		this.beanInfoWrapper = new BeanInfoWrapper(Introspector.getBeanInfo(ReflectionUtils.getClass(type)));
 	}
 	
 	@Override
@@ -53,24 +56,36 @@ public final class BeanWrapper extends AbstractWrapper implements PropertyWrappe
 		return this.targetClass;
 	}
 	
-	public Type getPropertyType(final Property property) throws NoSuchMethodException {
+	public Type getPropertyType(final Property property) {
 		return this.beanInfoWrapper.getPropertyDescriptor(property.getName()).getReadMethod().getGenericReturnType();
 	}
 	
-	public void setLocalProperty(final Property property) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ConversionException {
+	public void setLocalProperty(final Property property) throws ConversionException {
 		PropertyDescriptor propertyDescriptor = this.beanInfoWrapper.getPropertyDescriptor(property.getName());
 		Class<?> expectedPropertyType = ReflectionUtils.getClass(getPropertyType(property));
-		propertyDescriptor.getWriteMethod().invoke(this.bean, getConverters().convert(expectedPropertyType, property.getValue()));
+		try {
+			propertyDescriptor.getWriteMethod().invoke(this.bean, getConverters().convert(expectedPropertyType, property.getValue()));
+		} catch (ReflectiveOperationException e) {
+			throw new PropertyException(e);
+		}
 	}
 	
-	public void setLocalProperty(final Property property, final PropertyWrapper propertyWrapper) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	public void setLocalProperty(final Property property, final PropertyWrapper propertyWrapper) {
 		PropertyDescriptor propertyDescriptor = this.beanInfoWrapper.getPropertyDescriptor(property.getName());
-		propertyDescriptor.getWriteMethod().invoke(this.bean, propertyWrapper.getResult());		
+		try {
+			propertyDescriptor.getWriteMethod().invoke(this.bean, propertyWrapper.getResult());
+		} catch (ReflectiveOperationException e) {
+			throw new PropertyException(e);
+		}
 	}
 	
-	public Object getValue(final Property property) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	public Object getValue(final Property property) {
 		PropertyDescriptor propertyDescriptor = this.beanInfoWrapper.getPropertyDescriptor(property.getName());
-		return propertyDescriptor.getReadMethod().invoke(this.bean);
+		try {
+			return propertyDescriptor.getReadMethod().invoke(this.bean);
+		} catch (ReflectiveOperationException e) {
+			throw new PropertyException(e);
+		}
 	}
 	
 	@Override

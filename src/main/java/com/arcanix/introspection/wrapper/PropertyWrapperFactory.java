@@ -15,7 +15,6 @@
  */
 package com.arcanix.introspection.wrapper;
 
-import java.beans.IntrospectionException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,11 @@ import com.arcanix.introspection.util.ReflectionUtils;
  */
 public final class PropertyWrapperFactory {
 
-	public static PropertyWrapper getPropertyWrapper(final Object initialValue, final Type type, final Converters converters) throws InstantiationException, IllegalAccessException, IntrospectionException {		
+	public static PropertyWrapper getPropertyWrapper(
+			final Object initialValue,
+			final Type type,
+			final Converters converters) {
+		
 		Class<?> clazz = ReflectionUtils.getClass(type);
 		if (clazz.isAssignableFrom(List.class)) {
 			return new ListWrapper(initialValue, type, converters);

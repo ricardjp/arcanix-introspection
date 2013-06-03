@@ -15,8 +15,6 @@
  */
 package com.arcanix.introspection.wrapper;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 
 import com.arcanix.convert.ConversionException;
@@ -42,19 +40,13 @@ public abstract class AbstractWrapper implements PropertyWrapper {
 	}
 	
 	@Override
-	public final void setProperty(final Property property)
-		throws
-			ConversionException,
-			NoSuchMethodException,
-			InvocationTargetException,
-			IllegalAccessException,
-			IntrospectionException,
-			InstantiationException {
+	public final void setProperty(final Property property) throws ConversionException {
 		
 		if (property.getNextProperty() != null) {
 			final Object initialValue = getValue(property);
 			final PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
 					initialValue, getPropertyType(property), this.converters);
+			
 			setLocalProperty(property, nextWrapper);
 			nextWrapper.setProperty(property.getNextProperty());
 		} else {

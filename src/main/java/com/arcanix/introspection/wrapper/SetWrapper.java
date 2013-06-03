@@ -27,7 +27,6 @@ import com.arcanix.introspection.util.ReflectionUtils;
 
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
- *
  */
 public class SetWrapper extends AbstractWrapper {
 
@@ -66,7 +65,7 @@ public class SetWrapper extends AbstractWrapper {
 	}
 	
 	@Override
-	public Type getPropertyType(final Property property) throws NoSuchMethodException {
+	public Type getPropertyType(final Property property) {
 		return this.type;
 	}
 	
