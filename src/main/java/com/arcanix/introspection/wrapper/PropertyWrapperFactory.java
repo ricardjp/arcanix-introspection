@@ -28,6 +28,10 @@ import com.arcanix.introspection.util.ReflectionUtils;
  */
 public final class PropertyWrapperFactory {
 
+	public static PropertyWrapper getPropertyWrapper(final Type type, final Converters converters) {
+		return getPropertyWrapper(null, type, converters);
+	}
+	
 	public static PropertyWrapper getPropertyWrapper(
 			final Object initialValue,
 			final Type type,
