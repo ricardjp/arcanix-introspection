@@ -47,10 +47,10 @@ public final class PropertyWrapperFactory {
 	
 	public static boolean isWrapperType(final Type type) {
 		Class<?> clazz = ReflectionUtils.getClass(type);
-		if (clazz.isAssignableFrom(List.class)
-				|| clazz.isAssignableFrom(Set.class)
-				|| clazz.isAssignableFrom(Map.class)) {
-			
+		if (List.class.isAssignableFrom(clazz)
+				|| Set.class.isAssignableFrom(clazz)
+				|| Map.class.isAssignableFrom(clazz)) {
+		
 			return true;
 		}
 		return false;
