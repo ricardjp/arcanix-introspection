@@ -15,12 +15,18 @@
  */
 package com.arcanix.introspection;
 
-import com.arcanix.introspection.PropertyResolver.PropertyBuilder;
-
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
  */
 public final class Property {
+	
+	public static final String NESTED = ".";
+	
+	public static final char INDEXED_START = '[';
+	public static final char INDEXED_END = ']';
+	
+	public static final char MAPPED_START = '(';
+	public static final char MAPPED_END = ')';
 	
 	private final String value;
 	private final String name;
@@ -29,15 +35,25 @@ public final class Property {
 	private final boolean mapped;
 	private final boolean indexed;
 	private final Property nextProperty;
+	private final Property previousProperty;
 	
-	Property(final PropertyBuilder propertyBuilder) {
+	private Property(final PropertyBuilder propertyBuilder) {
 		this.value = propertyBuilder.getValue();
 		this.name = propertyBuilder.getName();
 		this.index = propertyBuilder.getIndex();
 		this.key = propertyBuilder.getKey();
 		this.indexed = propertyBuilder.isIndexed();
 		this.mapped = propertyBuilder.isMapped();
-		this.nextProperty = propertyBuilder.getNextProperty();
+		if (propertyBuilder.getNextProperty() != null) {
+			this.nextProperty = propertyBuilder.getNextProperty().build();
+		} else {
+			this.nextProperty = null;
+		}
+		if (propertyBuilder.getPreviousProperty() != null) {
+			this.previousProperty = propertyBuilder.getPreviousProperty().build();
+		} else {
+			this.previousProperty = null;
+		}
 	}
 
 	public String getValue() {
@@ -68,14 +84,127 @@ public final class Property {
 		return this.nextProperty;
 	}
 	
+	public Property getPreviousProperty() {
+		return this.previousProperty;
+	}
+	
 	@Override
 	public String toString() {
-		return new StringBuilder()
-			.append("name=").append(this.name).append(", ")
-			.append("index=").append(this.index).append(", ")
-			.append("key=").append(this.key).append(", ")
-			.append("value=").append(this.value)
-			.toString();
+		StringBuilder stringBuilder = new StringBuilder();
+		if (this.name != null) {
+			stringBuilder.append(this.name);
+		}
+		if (this.indexed) {
+			stringBuilder.append(INDEXED_START).append(this.index).append(INDEXED_END);
+		}
+		if (this.mapped) {
+			stringBuilder.append(MAPPED_START).append(this.key).append(MAPPED_END);
+		}
+		return stringBuilder.toString();
+	}
+	
+	public static final class PropertyBuilder {
+		
+		private String value;
+		private String name;
+		private String key;
+		private int index = -1;
+		private boolean mapped;
+		private boolean indexed;
+		private PropertyBuilder nextProperty;
+		private PropertyBuilder previousProperty;
+		
+		public String getValue() {
+			return this.value;
+		}
+		
+		public PropertyBuilder setValue(final String value) {
+			this.value = value;
+			return this;
+		}
+		
+		public String getName() {
+			return this.name;
+		}
+		
+		public PropertyBuilder setName(final String name) {
+			this.name = name;
+			return this;
+		}
+		
+		public String getKey() {
+			return this.key;
+		}
+		
+		public PropertyBuilder setKey(final String key) {
+			this.key = key;
+			if (key != null) {
+				setMapped(true);
+			} else {
+				setMapped(false);
+			}
+			return this;
+		}
+		
+		public int getIndex() {
+			return this.index;
+		}
+		
+		public PropertyBuilder setIndex(final int index) {
+			this.index = index;
+			if (index != -1) {
+				setIndexed(true);
+			} else {
+				setIndexed(false);
+			}
+			return this;
+		}
+		
+		public boolean isMapped() {
+			return this.mapped;
+		}
+		
+		public PropertyBuilder setMapped(final boolean mapped) {
+			this.mapped = mapped;
+			return this;
+		}
+		
+		public boolean isIndexed() {
+			return this.indexed;
+		}
+		
+		public PropertyBuilder setIndexed(final boolean indexed) {
+			this.indexed = indexed;
+			return this;
+		}
+		
+		public PropertyBuilder getNextProperty() {
+			return this.nextProperty;
+		}
+		
+		public PropertyBuilder setNextProperty(final PropertyBuilder nextProperty) {
+			this.nextProperty = nextProperty;
+			return this;
+		}
+		
+		public PropertyBuilder getPreviousProperty() {
+			return this.previousProperty;
+		}
+		
+		public PropertyBuilder setPreviousProperty(final PropertyBuilder previousProperty) {
+			this.previousProperty = previousProperty;
+			return this;
+		}
+		
+		public Property build() {
+			return new Property(this);
+		}
+		
+		@Override
+		public String toString() {
+			return build().toString();
+		}
+		
 	}
 	
 }

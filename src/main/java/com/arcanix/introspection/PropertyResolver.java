@@ -18,22 +18,18 @@ package com.arcanix.introspection;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
+import com.arcanix.introspection.Property.PropertyBuilder;
 
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
  */
 public final class PropertyResolver {
-
-	private static final String NESTED = ".";
 	
-	private static final char INDEXED_START = '[';
-	private static final char INDEXED_END = ']';
+	private static final String INDEXED_PROPERTY_PATTERN =
+			"\\" + Property.INDEXED_START + "\\d+" + "\\" + Property.INDEXED_END;
 	
-	private static final char MAPPED_START = '(';
-	private static final char MAPPED_END = ')';
-	
-	private static final String INDEXED_PROPERTY_PATTERN = "\\" + INDEXED_START + "\\d+" + "\\" + INDEXED_END;
-	private static final String MAPPED_PROPERTY_PATTERN = "\\" + MAPPED_START + "(.*)?" + "\\" + MAPPED_END;
+	private static final String MAPPED_PROPERTY_PATTERN =
+			"\\" + Property.MAPPED_START + "(.*)?" + "\\" + Property.MAPPED_END;
 	
 	public boolean isIndexed(final String property) {
 		if (property == null || property.length() == 0) {
@@ -52,14 +48,14 @@ public final class PropertyResolver {
 	public int getIndex(final String property) {
 		if (isIndexed(property)) {
 			return Integer.parseInt(property.substring(
-					property.indexOf(INDEXED_START) + 1, property.indexOf(INDEXED_END)));
+					property.indexOf(Property.INDEXED_START) + 1, property.indexOf(Property.INDEXED_END)));
 		}
 		return -1;		
 	}
 	
 	public String getKey(final String property) {
 		if (isMapped(property)) {
-			return property.substring(property.indexOf(MAPPED_START) + 1, property.indexOf(MAPPED_END));
+			return property.substring(property.indexOf(Property.MAPPED_START) + 1, property.indexOf(Property.MAPPED_END));
 		}
 		return null;
 	}
@@ -93,7 +89,7 @@ public final class PropertyResolver {
 		
 		LinkedList<PropertyBuilder> properties = new LinkedList<>();
 
-		StringTokenizer tokenizer = new StringTokenizer(nestedProperty, NESTED);
+		StringTokenizer tokenizer = new StringTokenizer(nestedProperty, Property.NESTED);
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			
@@ -131,87 +127,15 @@ public final class PropertyResolver {
 				properties.addFirst(nextPropertyBuilder);
 			}
 			
-			
 		}
 		
-		Property nextProperty = null;
+		PropertyBuilder nextProperty = null;
 		for (PropertyBuilder propertyBuilder : properties) {
 			propertyBuilder.setNextProperty(nextProperty);
-			nextProperty = propertyBuilder.build();
+			nextProperty = propertyBuilder;
 		}
 		
-		return nextProperty;
-	}
-	
-	static final class PropertyBuilder {
-		
-		private String value;
-		private String name;
-		private String key;
-		private int index = -1;
-		private boolean mapped;
-		private boolean indexed;
-		private Property nextProperty;
-		
-		public String getValue() {
-			return this.value;
-		}
-		
-		public void setValue(final String value) {
-			this.value = value;
-		}
-		
-		public String getName() {
-			return this.name;
-		}
-		
-		public void setName(final String name) {
-			this.name = name;
-		}
-		
-		public String getKey() {
-			return this.key;
-		}
-		
-		public void setKey(final String key) {
-			this.key = key;
-		}
-		
-		public int getIndex() {
-			return this.index;
-		}
-		
-		public void setIndex(final int index) {
-			this.index = index;
-		}
-		
-		public boolean isMapped() {
-			return this.mapped;
-		}
-		
-		public void setMapped(final boolean mapped) {
-			this.mapped = mapped;
-		}
-		
-		public boolean isIndexed() {
-			return this.indexed;
-		}
-		
-		public void setIndexed(final boolean indexed) {
-			this.indexed = indexed;
-		}
-		
-		public Property getNextProperty() {
-			return this.nextProperty;
-		}
-		
-		public void setNextProperty(final Property nextProperty) {
-			this.nextProperty = nextProperty;
-		}
-		
-		public Property build() {
-			return new Property(this);
-		}
+		return nextProperty.build();
 	}
 	
 }

@@ -31,14 +31,17 @@ public final class BeanUtils {
 		this.converters = converters;
 	}
 	
+	public void setNestedProperty(final Object bean, final Property property) throws ConversionException {
+		BeanWrapper beanWrapper = new BeanWrapper(bean, bean.getClass(), this.converters);
+		beanWrapper.setProperty(property);
+	}
+	
 	public void setNestedProperty(
 			final Object bean,
 			final String nestedProperty, 
 			final String value) throws ConversionException {
 		
-		Property property = this.resolver.resolveNestedProperty(nestedProperty, value);
-		BeanWrapper beanWrapper = new BeanWrapper(bean, bean.getClass(), this.converters);
-		beanWrapper.setProperty(property);
+		setNestedProperty(bean, this.resolver.resolveNestedProperty(nestedProperty, value));
 	}
 	
 }
