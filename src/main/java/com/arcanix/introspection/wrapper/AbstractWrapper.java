@@ -58,6 +58,15 @@ public abstract class AbstractWrapper implements PropertyWrapper {
 					setLocalProperty(previousProperty, nextWrapper);
 				}
 				nextWrapper.setLocalProperty(property);
+			} else if (property.isMapped() || property.isIndexed()) {
+				final Object initialValue = getValue(property);
+				final PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
+						initialValue, getPropertyType(property), this.converters);
+				
+				if (initialValue == null) {
+					setLocalProperty(property, nextWrapper);
+				}
+				nextWrapper.setLocalProperty(property);				
 			} else {
 				setLocalProperty(property);
 			}
