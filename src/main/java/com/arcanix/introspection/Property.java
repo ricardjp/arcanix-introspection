@@ -37,20 +37,38 @@ public final class Property {
 	private final Property nextProperty;
 	private final Property previousProperty;
 	
-	private Property(final PropertyBuilder propertyBuilder) {
+	private Property(final PropertyBuilder propertyBuilder) {		
 		this.value = propertyBuilder.getValue();
 		this.name = propertyBuilder.getName();
 		this.index = propertyBuilder.getIndex();
 		this.key = propertyBuilder.getKey();
 		this.indexed = propertyBuilder.isIndexed();
 		this.mapped = propertyBuilder.isMapped();
+		
+		PropertyGroup propertyGroup = propertyBuilder.getPropertyGroup();
+		if (propertyBuilder.getNextProperty() != null || propertyBuilder.getPreviousProperty() != null) {
+			if (propertyGroup == null) {
+				propertyGroup = new PropertyGroup();
+			}
+			propertyGroup.addProperty(this);
+		}
+		
 		if (propertyBuilder.getNextProperty() != null) {
-			this.nextProperty = propertyBuilder.getNextProperty().build();
+			if (propertyGroup.getNext(this) != null) {
+				this.nextProperty = propertyGroup.getNext(this);
+			} else {
+				this.nextProperty = propertyBuilder.getNextProperty().build(propertyGroup);
+			}
 		} else {
 			this.nextProperty = null;
 		}
+		
 		if (propertyBuilder.getPreviousProperty() != null) {
-			this.previousProperty = propertyBuilder.getPreviousProperty().build();
+			if (propertyGroup.getPrevious(this) != null) {
+				this.previousProperty = propertyGroup.getPrevious(this);
+			} else {
+				this.previousProperty = propertyBuilder.getPreviousProperty().build(propertyGroup);
+			}
 		} else {
 			this.previousProperty = null;
 		}
@@ -88,6 +106,30 @@ public final class Property {
 		return this.previousProperty;
 	}
 	
+	public String toExpression() {
+		Property nextProperty = this;
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		do {
+			stringBuilder.append(nextProperty.toString());
+			if (nextProperty.getNextProperty() != null) {
+				stringBuilder.append(Property.NESTED);
+			}
+			nextProperty = nextProperty.getNextProperty();
+		}
+		while (nextProperty != null);
+		
+		return stringBuilder.toString();
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other == this) {
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -113,6 +155,7 @@ public final class Property {
 		private boolean indexed;
 		private PropertyBuilder nextProperty;
 		private PropertyBuilder previousProperty;
+		private PropertyGroup propertyGroup;
 		
 		public String getValue() {
 			return this.value;
@@ -184,6 +227,9 @@ public final class Property {
 		
 		public PropertyBuilder setNextProperty(final PropertyBuilder nextProperty) {
 			this.nextProperty = nextProperty;
+			if (nextProperty.getPreviousProperty() != this) {
+				nextProperty.setPreviousProperty(this);
+			}
 			return this;
 		}
 		
@@ -193,16 +239,24 @@ public final class Property {
 		
 		public PropertyBuilder setPreviousProperty(final PropertyBuilder previousProperty) {
 			this.previousProperty = previousProperty;
+			if (previousProperty.getNextProperty() != this) {
+				previousProperty.setNextProperty(this);
+			}
 			return this;
 		}
 		
+		public PropertyGroup getPropertyGroup() {
+			return this.propertyGroup;
+		}
+		
 		public Property build() {
+			this.propertyGroup = null;
 			return new Property(this);
 		}
 		
-		@Override
-		public String toString() {
-			return build().toString();
+		public Property build(PropertyGroup propertyGroup) {
+			this.propertyGroup = propertyGroup;
+			return new Property(this);
 		}
 		
 	}

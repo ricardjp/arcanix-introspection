@@ -15,8 +15,6 @@
  */
 package com.arcanix.introspection.wrapper;
 
-import java.lang.reflect.Type;
-
 import com.arcanix.convert.ConversionException;
 import com.arcanix.convert.Converters;
 import com.arcanix.introspection.Property;
@@ -41,25 +39,23 @@ public abstract class AbstractWrapper implements PropertyWrapper {
 	
 	@Override
 	public final void setProperty(final Property property) throws ConversionException {
-		
 		if (property.getNextProperty() != null) {
 			final Object initialValue = getValue(property);
 			final PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
 					initialValue, getPropertyType(property), this.converters);
-			
 			setLocalProperty(property, nextWrapper);
 			nextWrapper.setProperty(property.getNextProperty());
 		} else {
 			
 			// verify if no embedded wrappers (i.e.: map of lists or map of sets)
-			Type type = getPropertyType(property);
-			if (PropertyWrapperFactory.isWrapperType(type)) {
-				final Object initialValue = getValue(property);
+			Property previousProperty = property.getPreviousProperty();
+			if (previousProperty.isMapped() || previousProperty.isIndexed()) {
+				final Object initialValue = getValue(previousProperty);
 				final PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
 						initialValue, getPropertyType(property), this.converters);
 				
 				if (initialValue == null) {
-					setLocalProperty(property, nextWrapper);
+					setLocalProperty(previousProperty, nextWrapper);
 				}
 				nextWrapper.setLocalProperty(property);
 			} else {
