@@ -49,7 +49,7 @@ public abstract class AbstractWrapper implements PropertyWrapper {
 			
 			// verify if no embedded wrappers (i.e.: map of lists or map of sets)
 			Property previousProperty = property.getPreviousProperty();
-			if (previousProperty.isMapped() || previousProperty.isIndexed()) {
+			if (previousProperty != null && (previousProperty.isMapped() || previousProperty.isIndexed())) {
 				final Object initialValue = getValue(previousProperty);
 				final PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
 						initialValue, getPropertyType(property), this.converters);
