@@ -15,6 +15,8 @@
  */
 package com.arcanix.introspection.wrapper;
 
+import java.lang.reflect.Type;
+
 import com.arcanix.convert.ConversionException;
 import com.arcanix.convert.Converters;
 import com.arcanix.introspection.Property;
@@ -39,34 +41,29 @@ public abstract class AbstractWrapper implements PropertyWrapper {
 	
 	@Override
 	public final void setProperty(final Property property) throws ConversionException {
+		if (property == null) {
+			throw new NullPointerException("Property cannot be null");
+		}
 		if (property.getNextProperty() != null) {
-			final Object initialValue = getValue(property);
-			final PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
+			Object initialValue = getValue(property);
+			PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
 					initialValue, getPropertyType(property), this.converters);
 			setLocalProperty(property, nextWrapper);
 			nextWrapper.setProperty(property.getNextProperty());
 		} else {
 			
 			// verify if no embedded wrappers (i.e.: map of lists or map of sets)
-			Property previousProperty = property.getPreviousProperty();
-			if (previousProperty != null && (previousProperty.isMapped() || previousProperty.isIndexed())) {
-				final Object initialValue = getValue(previousProperty);
-				final PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
-						initialValue, getPropertyType(property), this.converters);
-				
-				if (initialValue == null) {
-					setLocalProperty(previousProperty, nextWrapper);
-				}
-				nextWrapper.setLocalProperty(property);
-			} else if (property.isMapped() || property.isIndexed()) {
-				final Object initialValue = getValue(property);
-				final PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
+			Type type = getPropertyType(property);
+			
+			if (PropertyWrapperFactory.isWrapperType(type)) {
+				Object initialValue = getValue(property);
+				PropertyWrapper nextWrapper = PropertyWrapperFactory.getPropertyWrapper(
 						initialValue, getPropertyType(property), this.converters);
 				
 				if (initialValue == null) {
 					setLocalProperty(property, nextWrapper);
 				}
-				nextWrapper.setLocalProperty(property);				
+				nextWrapper.setLocalProperty(property);
 			} else {
 				setLocalProperty(property);
 			}

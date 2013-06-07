@@ -90,52 +90,49 @@ public final class PropertyResolver {
 		LinkedList<PropertyBuilder> properties = new LinkedList<>();
 
 		StringTokenizer tokenizer = new StringTokenizer(nestedProperty, Property.NESTED);
+		
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			
-			// TODO put some order
 			PropertyBuilder propertyBuilder = new PropertyBuilder();
+			if (!properties.isEmpty()) {
+				propertyBuilder.setPreviousProperty(properties.getLast());
+			}
 			propertyBuilder.setValue(value);
 			propertyBuilder.setName(getProperty(token));
-			properties.addFirst(propertyBuilder);
+			properties.add(propertyBuilder);
 			
 			if (isIndexed(token)) {
+
+				propertyBuilder.setIndex(getIndex(token));
 				
 				PropertyBuilder nextPropertyBuilder = new PropertyBuilder();
+				nextPropertyBuilder.setPreviousProperty(propertyBuilder);
 				nextPropertyBuilder.setValue(value);
 				nextPropertyBuilder.setName(getProperty(token));
-				
-				propertyBuilder.setIndex(getIndex(token));
-				propertyBuilder.setIndexed(true);
-				
 				nextPropertyBuilder.setIndex(getIndex(token));
-				nextPropertyBuilder.setIndexed(true);
 				
-				properties.addFirst(nextPropertyBuilder);
+				properties.add(nextPropertyBuilder);
 			}
 			if (isMapped(token)) {
-				PropertyBuilder nextPropertyBuilder = new PropertyBuilder();
-				nextPropertyBuilder.setValue(value);
-				nextPropertyBuilder.setName(getProperty(token));
 				
 				propertyBuilder.setKey(getKey(token));
-				propertyBuilder.setMapped(true);
-
-				nextPropertyBuilder.setKey(getKey(token));
-				nextPropertyBuilder.setMapped(true);
 				
-				properties.addFirst(nextPropertyBuilder);
+				PropertyBuilder nextPropertyBuilder = new PropertyBuilder();
+				nextPropertyBuilder.setPreviousProperty(propertyBuilder);
+				nextPropertyBuilder.setValue(value);
+				nextPropertyBuilder.setName(getProperty(token));
+				nextPropertyBuilder.setKey(getKey(token));
+				
+				properties.add(nextPropertyBuilder);
 			}
 			
 		}
 		
-		PropertyBuilder nextProperty = null;
-		for (PropertyBuilder propertyBuilder : properties) {
-			propertyBuilder.setNextProperty(nextProperty);
-			nextProperty = propertyBuilder;
+		if (!properties.isEmpty()) {
+			return properties.getFirst().build();	
 		}
-		
-		return nextProperty.build();
+		return null;
 	}
 	
 }

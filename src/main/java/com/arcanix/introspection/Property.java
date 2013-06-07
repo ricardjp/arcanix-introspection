@@ -110,10 +110,18 @@ public final class Property {
 		Property nextProperty = this;
 		StringBuilder stringBuilder = new StringBuilder();
 		
+		boolean skip = false;
 		do {
-			stringBuilder.append(nextProperty.toString());
-			if (nextProperty.getNextProperty() != null) {
-				stringBuilder.append(Property.NESTED);
+			if (!skip) {
+				stringBuilder.append(nextProperty.toString());
+				if (nextProperty.isMapped() || nextProperty.isIndexed()) {
+					skip = true;
+				}
+				if (!skip && nextProperty.getNextProperty() != null) {
+					stringBuilder.append(Property.NESTED);
+				}
+			} else {
+				skip = false;
 			}
 			nextProperty = nextProperty.getNextProperty();
 		}
@@ -227,7 +235,7 @@ public final class Property {
 		
 		public PropertyBuilder setNextProperty(final PropertyBuilder nextProperty) {
 			this.nextProperty = nextProperty;
-			if (nextProperty.getPreviousProperty() != this) {
+			if (nextProperty != null && nextProperty.getPreviousProperty() != this) {
 				nextProperty.setPreviousProperty(this);
 			}
 			return this;
@@ -239,7 +247,7 @@ public final class Property {
 		
 		public PropertyBuilder setPreviousProperty(final PropertyBuilder previousProperty) {
 			this.previousProperty = previousProperty;
-			if (previousProperty.getNextProperty() != this) {
+			if (previousProperty != null && previousProperty.getNextProperty() != this) {
 				previousProperty.setNextProperty(this);
 			}
 			return this;
@@ -254,7 +262,7 @@ public final class Property {
 			return new Property(this);
 		}
 		
-		public Property build(PropertyGroup propertyGroup) {
+		private Property build(PropertyGroup propertyGroup) {
 			this.propertyGroup = propertyGroup;
 			return new Property(this);
 		}
