@@ -20,7 +20,6 @@ import java.util.LinkedList;
 
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
- *
  */
 public class PropertyGroup implements Iterable<Property> {
 
