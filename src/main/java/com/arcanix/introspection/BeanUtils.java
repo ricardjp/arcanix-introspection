@@ -27,6 +27,10 @@ public final class BeanUtils {
 	private final PropertyResolver resolver = new PropertyResolver();
 	private final Converters converters;
 	
+	public BeanUtils() {
+		this(Converters.getDefaultConverters());
+	}
+	
 	public BeanUtils(final Converters converters) {
 		this.converters = converters;
 	}
