@@ -27,7 +27,6 @@ import com.arcanix.introspection.util.ReflectionUtils;
 
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
- *
  */
 public class MapWrapper extends AbstractWrapper implements PropertyWrapper {
 
@@ -90,15 +89,16 @@ public class MapWrapper extends AbstractWrapper implements PropertyWrapper {
 			final PropertyWrapper propertyWrapper) throws ConversionException {
 		
 		if (!property.isMapped()) {
-			throw new IllegalArgumentException("Property must be mapped");
+			this.map.put(getConverters().convert(this.keyType, property.getName()), propertyWrapper.getResult());
+		} else {
+			this.map.put(getConverters().convert(this.keyType, property.getKey()), propertyWrapper.getResult());
 		}
-		this.map.put(getConverters().convert(this.keyType, property.getKey()), propertyWrapper.getResult());
 	}
 	
 	@Override
 	public Object getValue(final Property property) throws ConversionException {
 		if (!property.isMapped()) {
-			throw new IllegalArgumentException("Property must be mapped");
+			return this.map.get(getConverters().convert(this.keyType, property.getName()));
 		}
 		return this.map.get(getConverters().convert(this.keyType, property.getKey()));
 	}

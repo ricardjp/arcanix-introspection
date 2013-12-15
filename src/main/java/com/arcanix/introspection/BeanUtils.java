@@ -45,7 +45,7 @@ public final class BeanUtils {
 			final String nestedProperty, 
 			final String value) throws ConversionException {
 		
-		setNestedProperty(bean, this.resolver.resolveNestedProperty(nestedProperty, value));
+		setNestedProperty(bean, this.resolver.resolve(nestedProperty, value));
 	}
 	
 }
