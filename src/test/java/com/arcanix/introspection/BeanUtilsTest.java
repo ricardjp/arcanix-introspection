@@ -26,7 +26,6 @@ import com.arcanix.convert.ConversionException;
 
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
- *
  */
 public class BeanUtilsTest {
 
@@ -115,44 +114,26 @@ public class BeanUtilsTest {
 			return this.count;
 		}
 		
-		/**
-		 * @return the names
-		 */
 		public List<String> getNames() {
 			return this.names;
 		}
 		
-		/**
-		 * @param names the names to set
-		 */
 		public void setNames(List<String> names) {
 			this.names = names;
 		}
 		
-		/**
-		 * @return the addresses
-		 */
 		public Map<String, String> getAddresses() {
 			return this.addresses;
 		}
 		
-		/**
-		 * @param addresses the addresses to set
-		 */
 		public void setAddresses(Map<String, String> addresses) {
 			this.addresses = addresses;
 		}
 		
-		/**
-		 * @return the phones
-		 */
 		public List<Map<String, String>> getPhones() {
 			return this.phones;
 		}
 		
-		/**
-		 * @param phones the phones to set
-		 */
 		public void setPhones(List<Map<String, String>> phones) {
 			this.phones = phones;
 		}
