@@ -97,7 +97,7 @@ public final class PropertyResolver {
 		
 		LinkedList<PropertyBuilder> properties = new LinkedList<>();
 
-		StringTokenizer tokenizer = new StringTokenizer(nestedProperty, Property.NESTED);
+		StringTokenizer tokenizer = new StringTokenizer(nestedProperty, Character.toString(Property.NESTED));
 		
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();

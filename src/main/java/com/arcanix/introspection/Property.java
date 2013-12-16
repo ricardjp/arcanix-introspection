@@ -15,15 +15,12 @@
  */
 package com.arcanix.introspection;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
  */
 public final class Property {
 	
-	public static final String NESTED = ".";
+	public static final char NESTED = '.';
 	
 	public static final char INDEXED_START = '[';
 	public static final char INDEXED_END = ']';
@@ -268,16 +265,6 @@ public final class Property {
 		private Property build(PropertyGroup propertyGroup) {
 			this.propertyGroup = propertyGroup;
 			return new Property(this);
-		}
-		
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-				.append("value", this.value)
-				.append("name", this.name)
-				.append("key", this.key)
-				.append("index", this.index)
-				.toString();
 		}
 		
 	}
