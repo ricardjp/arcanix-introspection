@@ -16,9 +16,9 @@
 	</developers>
 
 	<scm>
-		<connection>https://github.com/ricardjp/eventuality.git</connection>
-		<developerConnection>https://github.com/ricardjp/eventuality.git</developerConnection>
-		<url>https://github.com/ricardjp/eventuality</url>
+		<connection>https://github.com/ricardjp/arcanix-introspection.git</connection>
+		<developerConnection>https://github.com/ricardjp/arcanix-introspection.git</developerConnection>
+		<url>https://github.com/ricardjp/arcanix-introspection</url>
 	</scm>
 
 	<build>
