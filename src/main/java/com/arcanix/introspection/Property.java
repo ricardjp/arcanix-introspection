@@ -20,13 +20,14 @@ package com.arcanix.introspection;
  */
 public final class Property {
 	
-	public static final char NESTED = '.';
+	public static final String NESTED = ".";
+	public static final String NESTED_REGEX = "\\.";
 	
-	public static final char INDEXED_START = '[';
-	public static final char INDEXED_END = ']';
+	public static final String INDEXED_START = "[";
+	public static final String INDEXED_END = "]";
 	
-	public static final char MAPPED_START = '(';
-	public static final char MAPPED_END = ')';
+	public static final String MAPPED_START = "(";
+	public static final String MAPPED_END = ")";
 	
 	private final String value;
 	private final String name;
