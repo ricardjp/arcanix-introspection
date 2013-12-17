@@ -16,7 +16,6 @@
 package com.arcanix.introspection;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -95,7 +94,7 @@ public final class PropertyResolver {
 	
 	public Property resolve(final String nestedProperty, final String value) {
 		
-		LinkedList<PropertyBuilder> properties = new LinkedList<>();
+		PropertyList properties = new PropertyList();
 
 		StringTokenizer tokenizer = new StringTokenizer(nestedProperty, Character.toString(Property.NESTED));
 		
@@ -103,16 +102,12 @@ public final class PropertyResolver {
 			String token = tokenizer.nextToken();
 			
 			PropertyBuilder propertyBuilder = new PropertyBuilder();
-			if (!properties.isEmpty()) {
-				propertyBuilder.setPreviousProperty(properties.getLast());
-			}
 			propertyBuilder.setValue(value);
 			propertyBuilder.setName(getProperty(token));
 			properties.add(propertyBuilder);
 			
 			for (String collectionToken : getCollectionTokens(token)) {
 				PropertyBuilder nextPropertyBuilder = new PropertyBuilder();
-				nextPropertyBuilder.setPreviousProperty(propertyBuilder);
 				nextPropertyBuilder.setValue(value);
 				nextPropertyBuilder.setName(getProperty(token));
 				
@@ -127,10 +122,7 @@ public final class PropertyResolver {
 			}	
 		}
 		
-		if (!properties.isEmpty()) {
-			return properties.getFirst().build();	
-		}
-		return null;
+		return properties.build();
 	}
 	
 }

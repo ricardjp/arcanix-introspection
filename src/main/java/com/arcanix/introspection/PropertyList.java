@@ -18,35 +18,35 @@ package com.arcanix.introspection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.arcanix.introspection.Property.PropertyBuilder;
+
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
  */
-public class PropertyGroup implements Iterable<Property> {
+public class PropertyList {
 
-	private final LinkedList<Property> properties = new LinkedList<>();
+	private final LinkedList<PropertyBuilder> properties = new LinkedList<>();
 	
-	@Override
-	public Iterator<Property> iterator() {
-		return this.properties.iterator();
+	public void add(PropertyBuilder propertyBuilder) {
+		this.properties.add(propertyBuilder);
 	}
 	
-	public void addProperty(Property property) {
-		this.properties.add(property);
-	}
-	
-	public Property getPrevious(Property property) {
-		int index = this.properties.indexOf(property);
-		if (index > 0) {
-			return this.properties.get(index - 1);
+	public Property build() {
+		PropertyBuilder next = null;
+		Property first = null;
+		
+		Iterator<PropertyBuilder> reverseIterator = this.properties.descendingIterator();
+		while (reverseIterator.hasNext()) {
+			PropertyBuilder property = reverseIterator.next();
+			if (next != null) {
+				property.setNextProperty(next.build());
+			}
+			
+			next = property;
+			first = property.build();
 		}
-		return null;
+
+		return first;
 	}
 	
-	public Property getNext(Property property) {
-		int index = this.properties.indexOf(property);
-		if (index < this.properties.size() - 1) {
-			return this.properties.get(index + 1);
-		}
-		return null;
-	}
 }

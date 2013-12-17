@@ -84,8 +84,6 @@ public class ListWrapper extends AbstractWrapper {
 		} else {
 			this.list.set(property.getIndex(), propertyWrapper.getResult());
 		}
-		
-		
 	}
 
 	@Override

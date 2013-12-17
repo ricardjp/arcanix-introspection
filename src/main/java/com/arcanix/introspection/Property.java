@@ -35,7 +35,6 @@ public final class Property {
 	private final boolean mapped;
 	private final boolean indexed;
 	private final Property nextProperty;
-	private final Property previousProperty;
 	
 	private Property(final PropertyBuilder propertyBuilder) {		
 		this.value = propertyBuilder.getValue();
@@ -43,35 +42,8 @@ public final class Property {
 		this.index = propertyBuilder.getIndex();
 		this.key = propertyBuilder.getKey();
 		this.indexed = propertyBuilder.isIndexed();
-		this.mapped = propertyBuilder.isMapped();
-		
-		PropertyGroup propertyGroup = propertyBuilder.getPropertyGroup();
-		if (propertyBuilder.getNextProperty() != null || propertyBuilder.getPreviousProperty() != null) {
-			if (propertyGroup == null) {
-				propertyGroup = new PropertyGroup();
-			}
-			propertyGroup.addProperty(this);
-		}
-		
-		if (propertyBuilder.getNextProperty() != null) {
-			if (propertyGroup.getNext(this) != null) {
-				this.nextProperty = propertyGroup.getNext(this);
-			} else {
-				this.nextProperty = propertyBuilder.getNextProperty().build(propertyGroup);
-			}
-		} else {
-			this.nextProperty = null;
-		}
-		
-		if (propertyBuilder.getPreviousProperty() != null) {
-			if (propertyGroup.getPrevious(this) != null) {
-				this.previousProperty = propertyGroup.getPrevious(this);
-			} else {
-				this.previousProperty = propertyBuilder.getPreviousProperty().build(propertyGroup);
-			}
-		} else {
-			this.previousProperty = null;
-		}
+		this.mapped = propertyBuilder.isMapped();		
+		this.nextProperty = propertyBuilder.getNextProperty();
 	}
 
 	public String getValue() {
@@ -100,10 +72,6 @@ public final class Property {
 	
 	public Property getNextProperty() {
 		return this.nextProperty;
-	}
-	
-	public Property getPreviousProperty() {
-		return this.previousProperty;
 	}
 	
 	public String toExpression() {
@@ -161,9 +129,7 @@ public final class Property {
 		private int index = -1;
 		private boolean mapped;
 		private boolean indexed;
-		private PropertyBuilder nextProperty;
-		private PropertyBuilder previousProperty;
-		private PropertyGroup propertyGroup;
+		private Property nextProperty;
 		
 		public String getValue() {
 			return this.value;
@@ -229,41 +195,16 @@ public final class Property {
 			return this;
 		}
 		
-		public PropertyBuilder getNextProperty() {
+		public Property getNextProperty() {
 			return this.nextProperty;
 		}
 		
-		public PropertyBuilder setNextProperty(final PropertyBuilder nextProperty) {
+		public PropertyBuilder setNextProperty(final Property nextProperty) {
 			this.nextProperty = nextProperty;
-			if (nextProperty != null && nextProperty.getPreviousProperty() != this) {
-				nextProperty.setPreviousProperty(this);
-			}
 			return this;
-		}
-		
-		public PropertyBuilder getPreviousProperty() {
-			return this.previousProperty;
-		}
-		
-		public PropertyBuilder setPreviousProperty(final PropertyBuilder previousProperty) {
-			this.previousProperty = previousProperty;
-			if (previousProperty != null && previousProperty.getNextProperty() != this) {
-				previousProperty.setNextProperty(this);
-			}
-			return this;
-		}
-		
-		public PropertyGroup getPropertyGroup() {
-			return this.propertyGroup;
 		}
 		
 		public Property build() {
-			this.propertyGroup = null;
-			return new Property(this);
-		}
-		
-		private Property build(PropertyGroup propertyGroup) {
-			this.propertyGroup = propertyGroup;
 			return new Property(this);
 		}
 		
