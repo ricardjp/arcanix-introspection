@@ -96,14 +96,6 @@ public final class Property {
 	}
 	
 	@Override
-	public boolean equals(Object other) {
-		if (other == this) {
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		if (this.name != null) {
