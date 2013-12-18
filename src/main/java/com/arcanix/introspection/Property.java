@@ -33,17 +33,13 @@ public final class Property {
 	private final String name;
 	private final Integer index;
 	private final String key;
-	private final boolean mapped;
-	private final boolean indexed;
 	private final Property nextProperty;
 	
 	private Property(final PropertyBuilder propertyBuilder) {		
 		this.value = propertyBuilder.getValue();
 		this.name = propertyBuilder.getName();
 		this.index = propertyBuilder.getIndex();
-		this.key = propertyBuilder.getKey();
-		this.indexed = propertyBuilder.isIndexed();
-		this.mapped = propertyBuilder.isMapped();		
+		this.key = propertyBuilder.getKey();		
 		this.nextProperty = propertyBuilder.getNextProperty();
 	}
 
@@ -64,11 +60,11 @@ public final class Property {
 	}
 
 	public boolean isMapped() {
-		return this.mapped;
+		return this.key != null;
 	}
 
 	public boolean isIndexed() {
-		return this.indexed;
+		return this.index != null;
 	}
 	
 	public Property getNextProperty() {
@@ -113,10 +109,10 @@ public final class Property {
 		if (this.name != null) {
 			stringBuilder.append(this.name);
 		}
-		if (this.indexed) {
+		if (isIndexed()) {
 			stringBuilder.append(INDEXED_START).append(this.index).append(INDEXED_END);
 		}
-		if (this.mapped) {
+		if (isMapped()) {
 			stringBuilder.append(MAPPED_START).append(this.key).append(MAPPED_END);
 		}
 		return stringBuilder.toString();
@@ -128,8 +124,6 @@ public final class Property {
 		private String name;
 		private String key;
 		private Integer index;
-		private boolean mapped;
-		private boolean indexed;
 		private Property nextProperty;
 		
 		public String getValue() {
@@ -156,11 +150,6 @@ public final class Property {
 		
 		public PropertyBuilder setKey(String key) {
 			this.key = key;
-			if (key != null) {
-				setMapped(true);
-			} else {
-				setMapped(false);
-			}
 			return this;
 		}
 		
@@ -170,29 +159,6 @@ public final class Property {
 		
 		public PropertyBuilder setIndex(Integer index) {
 			this.index = index;
-			if (index != null) {
-				setIndexed(true);
-			} else {
-				setIndexed(false);
-			}
-			return this;
-		}
-		
-		public boolean isMapped() {
-			return this.mapped;
-		}
-		
-		public PropertyBuilder setMapped(boolean mapped) {
-			this.mapped = mapped;
-			return this;
-		}
-		
-		public boolean isIndexed() {
-			return this.indexed;
-		}
-		
-		public PropertyBuilder setIndexed(boolean indexed) {
-			this.indexed = indexed;
 			return this;
 		}
 		
