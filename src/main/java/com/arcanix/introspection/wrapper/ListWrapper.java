@@ -79,10 +79,10 @@ public class ListWrapper extends AbstractWrapper {
 	
 	@Override
 	public void setLocalProperty(final Property property, final PropertyWrapper propertyWrapper) {
-		if (property.getIndex() < 0 || property.getIndex() >= this.list.size()) {
-			this.list.add(property.getIndex(), propertyWrapper.getResult());
+		if (property.getIndex().intValue() < 0 || property.getIndex().intValue() >= this.list.size()) {
+			this.list.add(property.getIndex().intValue(), propertyWrapper.getResult());
 		} else {
-			this.list.set(property.getIndex(), propertyWrapper.getResult());
+			this.list.set(property.getIndex().intValue(), propertyWrapper.getResult());
 		}
 	}
 
@@ -91,10 +91,10 @@ public class ListWrapper extends AbstractWrapper {
 		if (!property.isIndexed()) {
 			throw new IllegalArgumentException("Property must be indexed");
 		}
-		if (property.getIndex() < 0 || property.getIndex() >= this.list.size()) {
+		if (property.getIndex().intValue() < 0 || property.getIndex().intValue() >= this.list.size()) {
 			return null;
 		}
-		return this.list.get(property.getIndex());
+		return this.list.get(property.getIndex().intValue());
 	}
 	
 }
