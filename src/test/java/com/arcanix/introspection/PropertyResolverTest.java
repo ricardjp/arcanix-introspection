@@ -38,7 +38,7 @@ public class PropertyResolverTest {
 		
 		assertFalse(property.isIndexed());
 		assertFalse(property.isMapped());
-		assertEquals(-1, property.getIndex());
+		assertNull(property.getIndex());
 		assertNull(property.getKey());
 		assertEquals("message", property.getName());
 		assertEquals("Hello World!", property.getValue());
@@ -51,7 +51,7 @@ public class PropertyResolverTest {
 		
 		assertFalse(property.isIndexed());
 		assertFalse(property.isMapped());
-		assertEquals(-1, property.getIndex());
+		assertNull(property.getIndex());
 		assertNull(property.getKey());
 		assertEquals("employee", property.getName());
 		assertEquals("Hello World!", property.getValue());
@@ -59,7 +59,7 @@ public class PropertyResolverTest {
 		Property nextProperty = property.getNextProperty();
 		assertFalse(nextProperty.isIndexed());
 		assertFalse(nextProperty.isMapped());
-		assertEquals(-1, nextProperty.getIndex());
+		assertNull(nextProperty.getIndex());
 		assertNull(nextProperty.getKey());
 		assertEquals("message", nextProperty.getName());
 		assertEquals("Hello World!", nextProperty.getValue());
@@ -73,7 +73,7 @@ public class PropertyResolverTest {
 		// reference to map
 		assertFalse(property.isIndexed());
 		assertFalse(property.isMapped());
-		assertEquals(-1, property.getIndex());
+		assertNull(property.getIndex());
 		assertNull(property.getKey());
 		assertEquals("translations", property.getName());
 		assertEquals("propriété", property.getValue());
@@ -84,7 +84,7 @@ public class PropertyResolverTest {
 		assertNotNull(nextProperty);
 		assertFalse(nextProperty.isIndexed());
 		assertTrue(nextProperty.isMapped());
-		assertEquals(-1, nextProperty.getIndex());
+		assertNull(nextProperty.getIndex());
 		assertEquals("fr", nextProperty.getKey());
 		assertEquals("translations", nextProperty.getName());
 		assertEquals("propriété", nextProperty.getValue());
@@ -97,7 +97,7 @@ public class PropertyResolverTest {
 		// reference to map
 		assertFalse(property.isIndexed());
 		assertFalse(property.isMapped());
-		assertEquals(-1, property.getIndex());
+		assertNull(property.getIndex());
 		assertNull(property.getKey());
 		assertEquals("translations", property.getName());
 		assertEquals("propriété", property.getValue());
@@ -108,7 +108,7 @@ public class PropertyResolverTest {
 		assertNotNull(nextProperty);
 		assertFalse(nextProperty.isIndexed());
 		assertTrue(nextProperty.isMapped());
-		assertEquals(-1, nextProperty.getIndex());
+		assertNull(nextProperty.getIndex());
 		assertEquals("fr", nextProperty.getKey());
 		assertEquals("translations", nextProperty.getName());
 		assertEquals("propriété", nextProperty.getValue());
@@ -119,7 +119,7 @@ public class PropertyResolverTest {
 		assertNotNull(beanProperty);
 		assertFalse(beanProperty.isIndexed());
 		assertFalse(beanProperty.isMapped());
-		assertEquals(-1, beanProperty.getIndex());
+		assertNull(beanProperty.getIndex());
 		assertNull(beanProperty.getKey());
 		assertEquals("name", beanProperty.getName());
 		assertEquals("propriété", beanProperty.getValue());
@@ -132,7 +132,7 @@ public class PropertyResolverTest {
 		// reference to bean
 		assertFalse(property.isIndexed());
 		assertFalse(property.isMapped());
-		assertEquals(-1, property.getIndex());
+		assertNull(property.getIndex());
 		assertNull(property.getKey());
 		assertEquals("dictionary", property.getName());
 		assertEquals("propriété", property.getValue());
@@ -143,7 +143,7 @@ public class PropertyResolverTest {
 		assertNotNull(nextProperty);
 		assertFalse(nextProperty.isIndexed());
 		assertFalse(nextProperty.isMapped());
-		assertEquals(-1, nextProperty.getIndex());
+		assertNull(nextProperty.getIndex());
 		assertNull(nextProperty.getKey());
 		assertEquals("translations", nextProperty.getName());
 		assertEquals("propriété", nextProperty.getValue());
@@ -154,7 +154,7 @@ public class PropertyResolverTest {
 		assertNotNull(beanProperty);
 		assertFalse(beanProperty.isIndexed());
 		assertTrue(beanProperty.isMapped());
-		assertEquals(-1, beanProperty.getIndex());
+		assertNull(beanProperty.getIndex());
 		assertEquals("fr", beanProperty.getKey());
 		assertEquals("translations", beanProperty.getName());
 		assertEquals("propriété", beanProperty.getValue());
@@ -167,7 +167,7 @@ public class PropertyResolverTest {
 		// reference to list
 		assertFalse(property.isIndexed());
 		assertFalse(property.isMapped());
-		assertEquals(-1, property.getIndex());
+		assertNull(property.getIndex());
 		assertNull(property.getKey());
 		assertEquals("components", property.getName());
 		assertEquals("component #1", property.getValue());
@@ -177,7 +177,7 @@ public class PropertyResolverTest {
 		assertNotNull(nextProperty);
 		assertTrue(nextProperty.isIndexed());
 		assertFalse(nextProperty.isMapped());
-		assertEquals(0, nextProperty.getIndex());
+		assertEquals(Integer.valueOf(0), nextProperty.getIndex());
 		assertNull(nextProperty.getKey());
 		assertEquals("components", nextProperty.getName());
 		assertEquals("component #1", nextProperty.getValue());
@@ -190,7 +190,7 @@ public class PropertyResolverTest {
 		// reference to list
 		assertFalse(property.isIndexed());
 		assertFalse(property.isMapped());
-		assertEquals(-1, property.getIndex());
+		assertNull(property.getIndex());
 		assertNull(property.getKey());
 		assertEquals("components", property.getName());
 		assertEquals("component #1", property.getValue());
@@ -200,7 +200,7 @@ public class PropertyResolverTest {
 		assertNotNull(nextProperty);
 		assertTrue(nextProperty.isIndexed());
 		assertFalse(nextProperty.isMapped());
-		assertEquals(0, nextProperty.getIndex());
+		assertEquals(Integer.valueOf(0), nextProperty.getIndex());
 		assertNull(nextProperty.getKey());
 		assertEquals("components", nextProperty.getName());
 		assertEquals("component #1", nextProperty.getValue());
@@ -209,7 +209,7 @@ public class PropertyResolverTest {
 		assertNotNull(nextProperty);
 		assertFalse(beanProperty.isIndexed());
 		assertFalse(beanProperty.isMapped());
-		assertEquals(-1, beanProperty.getIndex());
+		assertNull(beanProperty.getIndex());
 		assertNull(beanProperty.getKey());
 		assertEquals("name", beanProperty.getName());
 		assertEquals("component #1", beanProperty.getValue());
@@ -222,7 +222,7 @@ public class PropertyResolverTest {
 		// reference to bean
 		assertFalse(property.isIndexed());
 		assertFalse(property.isMapped());
-		assertEquals(-1, property.getIndex());
+		assertNull(property.getIndex());
 		assertNull(property.getKey());
 		assertEquals("name", property.getName());
 		assertEquals("component #1", property.getValue());
@@ -232,7 +232,7 @@ public class PropertyResolverTest {
 		assertNotNull(nextProperty);
 		assertFalse(nextProperty.isIndexed());
 		assertFalse(nextProperty.isMapped());
-		assertEquals(-1, nextProperty.getIndex());
+		assertNull(nextProperty.getIndex());
 		assertNull(nextProperty.getKey());
 		assertEquals("components", nextProperty.getName());
 		assertEquals("component #1", nextProperty.getValue());
@@ -242,7 +242,7 @@ public class PropertyResolverTest {
 		assertNotNull(beanProperty);
 		assertTrue(beanProperty.isIndexed());
 		assertFalse(beanProperty.isMapped());
-		assertEquals(0, beanProperty.getIndex());
+		assertEquals(Integer.valueOf(0), beanProperty.getIndex());
 		assertNull(beanProperty.getKey());
 		assertEquals("components", beanProperty.getName());
 		assertEquals("component #1", beanProperty.getValue());
@@ -261,7 +261,7 @@ public class PropertyResolverTest {
 		assertNotNull(property.getNextProperty());
 		Property mapProperty = property.getNextProperty();
 		assertTrue(mapProperty.isIndexed());
-		assertEquals(1, mapProperty.getIndex());
+		assertEquals(Integer.valueOf(1), mapProperty.getIndex());
 		
 		// into map property
 		assertNotNull(property.getNextProperty().getNextProperty());
@@ -292,7 +292,7 @@ public class PropertyResolverTest {
 		assertNotNull(property.getNextProperty().getNextProperty());
 		Property intoListProperty = listProperty.getNextProperty();
 		assertTrue(intoListProperty.isIndexed());
-		assertEquals(1, intoListProperty.getIndex());
+		assertEquals(Integer.valueOf(1), intoListProperty.getIndex());
 		
 		// ensure no more property
 		assertNull(property.getNextProperty().getNextProperty().getNextProperty());

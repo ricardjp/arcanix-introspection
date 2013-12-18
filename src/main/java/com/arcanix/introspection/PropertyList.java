@@ -23,7 +23,7 @@ import com.arcanix.introspection.Property.PropertyBuilder;
 /**
  * @author ricardjp@arcanix.com (Jean-Philippe Ricard)
  */
-public class PropertyList {
+final class PropertyList {
 
 	private final LinkedList<PropertyBuilder> properties = new LinkedList<>();
 	
@@ -32,21 +32,12 @@ public class PropertyList {
 	}
 	
 	public Property build() {
-		PropertyBuilder next = null;
-		Property first = null;
-		
-		Iterator<PropertyBuilder> reverseIterator = this.properties.descendingIterator();
+		Property next = null;
+		final Iterator<PropertyBuilder> reverseIterator = this.properties.descendingIterator();
 		while (reverseIterator.hasNext()) {
-			PropertyBuilder property = reverseIterator.next();
-			if (next != null) {
-				property.setNextProperty(next.build());
-			}
-			
-			next = property;
-			first = property.build();
+			next = reverseIterator.next().setNextProperty(next).build();
 		}
-
-		return first;
+		return next;
 	}
 	
 }

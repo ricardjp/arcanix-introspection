@@ -50,13 +50,13 @@ public final class PropertyResolver {
 		return (property.matches("^(.*)" + MAPPED_PROPERTY_PATTERN + "$"));		
 	}
 	
-	public int getIndex(final String property) {
+	public Integer getIndex(final String property) {
 		if (isIndexed(property)) {
-			return Integer.parseInt(property.substring(
+			return Integer.valueOf(property.substring(
 					property.indexOf(Property.INDEXED_START) + 1,
 					property.indexOf(Property.INDEXED_END)));
 		}
-		return -1;		
+		return null;		
 	}
 	
 	public String getKey(final String property) {
@@ -79,6 +79,24 @@ public final class PropertyResolver {
 		return propertyName;
 	}
 	
+	public Property resolve(final String nestedProperty, final String value) {
+		PropertyList properties = new PropertyList();
+		
+		for (String token : nestedProperty.split(Property.NESTED_REGEX)) {
+			String name = getProperty(token);
+			properties.add(new PropertyBuilder().setValue(value).setName(name));
+			buildCollectionProperties(properties, token, name, value);
+		}
+		
+		return properties.build();
+	}
+	
+	private void buildCollectionProperties(PropertyList properties, String token, String name, String value) {
+		for (String collectionToken : getCollectionTokens(token)) {				
+			properties.add(buildPropertyFromCollectionToken(collectionToken, name, value));
+		}
+	}
+	
 	private List<String> getCollectionTokens(String token) {
 		Pattern collectionPattern = Pattern.compile(COLLECTION_PROPERTY_PATTERN);
 		Matcher matcher = collectionPattern.matcher(token);
@@ -91,28 +109,14 @@ public final class PropertyResolver {
 		return collectionTokens;
 	}
 	
-	public Property resolve(final String nestedProperty, final String value) {
-		final PropertyList properties = new PropertyList();
-		
-		for (String token : nestedProperty.split(Property.NESTED_REGEX)) {
-			properties.add(new PropertyBuilder().setValue(value).setName(getProperty(token)));
-			
-			for (String collectionToken : getCollectionTokens(token)) {
-				PropertyBuilder nextPropertyBuilder = new PropertyBuilder();
-				nextPropertyBuilder.setValue(value);
-				nextPropertyBuilder.setName(getProperty(token));
-				
-				if (isIndexed(collectionToken)) {
-					nextPropertyBuilder.setIndex(getIndex(collectionToken));
-				} if (isMapped(collectionToken)) {
-					nextPropertyBuilder.setKey(getKey(collectionToken));
-				}	
-				
-				properties.add(nextPropertyBuilder);
-			}	
+	private PropertyBuilder buildPropertyFromCollectionToken(String collectionToken, String name, String value) {
+		PropertyBuilder propertyBuilder = new PropertyBuilder().setValue(value).setName(name);
+		if (isIndexed(collectionToken)) {
+			propertyBuilder.setIndex(getIndex(collectionToken));
+		} else if (isMapped(collectionToken)) {
+			propertyBuilder.setKey(getKey(collectionToken));
 		}
-		
-		return properties.build();
+		return propertyBuilder;
 	}
 	
 }

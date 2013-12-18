@@ -31,7 +31,7 @@ public final class Property {
 	
 	private final String value;
 	private final String name;
-	private final int index;
+	private final Integer index;
 	private final String key;
 	private final boolean mapped;
 	private final boolean indexed;
@@ -55,7 +55,7 @@ public final class Property {
 		return this.name;
 	}
 
-	public int getIndex() {
+	public Integer getIndex() {
 		return this.index;
 	}
 
@@ -127,7 +127,7 @@ public final class Property {
 		private String value;
 		private String name;
 		private String key;
-		private int index = -1;
+		private Integer index;
 		private boolean mapped;
 		private boolean indexed;
 		private Property nextProperty;
@@ -136,7 +136,7 @@ public final class Property {
 			return this.value;
 		}
 		
-		public PropertyBuilder setValue(final String value) {
+		public PropertyBuilder setValue(String value) {
 			this.value = value;
 			return this;
 		}
@@ -145,7 +145,7 @@ public final class Property {
 			return this.name;
 		}
 		
-		public PropertyBuilder setName(final String name) {
+		public PropertyBuilder setName(String name) {
 			this.name = name;
 			return this;
 		}
@@ -154,7 +154,7 @@ public final class Property {
 			return this.key;
 		}
 		
-		public PropertyBuilder setKey(final String key) {
+		public PropertyBuilder setKey(String key) {
 			this.key = key;
 			if (key != null) {
 				setMapped(true);
@@ -164,13 +164,13 @@ public final class Property {
 			return this;
 		}
 		
-		public int getIndex() {
+		public Integer getIndex() {
 			return this.index;
 		}
 		
-		public PropertyBuilder setIndex(final int index) {
+		public PropertyBuilder setIndex(Integer index) {
 			this.index = index;
-			if (index != -1) {
+			if (index != null) {
 				setIndexed(true);
 			} else {
 				setIndexed(false);
@@ -182,7 +182,7 @@ public final class Property {
 			return this.mapped;
 		}
 		
-		public PropertyBuilder setMapped(final boolean mapped) {
+		public PropertyBuilder setMapped(boolean mapped) {
 			this.mapped = mapped;
 			return this;
 		}
@@ -191,7 +191,7 @@ public final class Property {
 			return this.indexed;
 		}
 		
-		public PropertyBuilder setIndexed(final boolean indexed) {
+		public PropertyBuilder setIndexed(boolean indexed) {
 			this.indexed = indexed;
 			return this;
 		}
@@ -200,7 +200,7 @@ public final class Property {
 			return this.nextProperty;
 		}
 		
-		public PropertyBuilder setNextProperty(final Property nextProperty) {
+		public PropertyBuilder setNextProperty(Property nextProperty) {
 			this.nextProperty = nextProperty;
 			return this;
 		}

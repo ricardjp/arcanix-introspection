@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public final class BeanInfoWrapper {
 	
-	private Map<String, PropertyDescriptor> propertyDescriptors = new HashMap<>();
+	private final Map<String, PropertyDescriptor> propertyDescriptors = new HashMap<>();
 	
 	public BeanInfoWrapper(final BeanInfo beanInfo) {
 		for (PropertyDescriptor propertyDescriptor : beanInfo.getPropertyDescriptors()) {
